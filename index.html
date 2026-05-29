@@ -660,21 +660,21 @@
         <div class="card-body">
           <div class="radio-group" id="problem_type">
             <label class="radio-item">
-              <input type="radio" name="problem" value="Не выписывают рецепт">
+              <input type="radio" name="problem" value="Не выписывают рецепт" onclick="updateRecipeFields()">
               <div class="radio-label">
                 💊 Не выписывают рецепт
                 <small>Врач отказывает в выписке льготного рецепта</small>
               </div>
             </label>
             <label class="radio-item">
-              <input type="radio" name="problem" value="Не выдают лекарства">
+              <input type="radio" name="problem" value="Не выдают лекарства" onclick="updateRecipeFields()">
               <div class="radio-label">
                 🏪 Не выдают лекарства
                 <small>Рецепт есть, но лекарство отсутствует или в выдаче отказывают</small>
               </div>
             </label>
             <label class="radio-item">
-              <input type="radio" name="problem" value="Другое">
+              <input type="radio" name="problem" value="Другое" onclick="updateRecipeFields()">
               <div class="radio-label">
                 📝 Другое
                 <small>Иная проблема с лекарственным обеспечением</small>
