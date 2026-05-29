@@ -599,10 +599,10 @@
             <input type="text" id="address" placeholder="г. Красноярск, ул. Ленина, д. 1, кв. 1">
             <div class="field-error" id="err-address">Укажите адрес регистрации</div>
           </div>
-          <div class="field" style="margin-top:4px">
-            <label class="consent-check" style="cursor:pointer">
-              <input type="checkbox" id="for_other" onchange="togglePatientFields()">
-              <span>Обращение подаётся за другого человека (ребёнок, подопечный)</span>
+          <div style="margin-bottom:14px">
+            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;padding:10px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-sm)">
+              <input type="checkbox" id="for_other" onchange="togglePatientFields()" style="margin-top:2px;accent-color:var(--accent);flex-shrink:0;width:16px;height:16px">
+              <span style="font-size:14px;line-height:1.4">Обращение подаётся за другого человека (ребёнок, подопечный)</span>
             </label>
           </div>
 
@@ -696,10 +696,10 @@
             <label>Дозировка</label>
             <input type="text" id="dosage" placeholder="500 мг, 2 р/день">
           </div>
-          <div class="field" style="margin-top:4px">
-            <label class="consent-check" style="cursor:pointer">
-              <input type="checkbox" id="vk_decision">
-              <span>Есть решение врачебной комиссии о назначении препарата по торговому наименованию</span>
+          <div style="margin-bottom:14px">
+            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;padding:10px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-sm)">
+              <input type="checkbox" id="vk_decision" style="margin-top:2px;accent-color:var(--accent);flex-shrink:0;width:16px;height:16px">
+              <span style="font-size:14px;line-height:1.4">Есть решение врачебной комиссии о назначении препарата по торговому наименованию</span>
             </label>
           </div>
           <div id="recipeFields" style="display:none">
