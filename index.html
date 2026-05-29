@@ -560,7 +560,7 @@
   <div id="formWrap">
     <div class="info-block">
       <div class="info-block-icon">💡</div>
-      <div>Заполните форму — обращение будет зарегистрировано и передано специалистам Минздрава Красноярского края.</div>
+      <div>Заполните, пожалуйста, форму. Ваше обращение будет оперативно передано для обработки специалистам в рабочие дни.</div>
     </div>
 
     <!-- Шаг-индикатор -->
@@ -1024,7 +1024,7 @@ function handleFileUpload(input) {
 function buildSummary() {
   const problem = (document.querySelector('input[name=problem]:checked') || {}).value || '—';
   const rows = [
-    ['ФИО', g('fio')],
+    ['ФИО заявителя', g('fio')],
     ['Дата рождения', formatDate(g('dob'))],
     ['Телефон', g('phone')],
     ['Адрес', g('address')],
@@ -1039,6 +1039,17 @@ function buildSummary() {
   let html = '<dl class="info-list">';
   rows.forEach(([k, v]) => { html += `<dt>${k}</dt><dd>${v || '—'}</dd>`; });
   html += '</dl>';
+  if (document.getElementById('for_other').checked) {
+    html += '<div style="margin-top:10px;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em">Данные пациента</div>';
+    html += '<dl class="info-list" style="margin-top:6px">';
+    html += `<dt>ФИО</dt><dd>${g('patient_fio') || '—'}</dd>`;
+    html += `<dt>Дата рожд.</dt><dd>${formatDate(g('patient_dob'))}</dd>`;
+    html += `<dt>Родство</dt><dd>${g('patient_relation') || '—'}</dd>`;
+    html += '</dl>';
+  }
+  if (document.getElementById('vk_decision').checked) {
+    html += '<div style="margin-top:8px;font-size:13px;color:var(--green)">✅ Есть решение врачебной комиссии</div>';
+  }
   if (uploadedFiles.length)
     html += `<div style="margin-top:10px;font-size:12px;color:var(--green)">📎 Файлы: ${uploadedFiles.map(f=>f.name).join(', ')}</div>`;
   document.getElementById('summaryBlock').innerHTML = html;
@@ -1113,7 +1124,7 @@ async function submitForm() {
     const result = await response.json();
 
     // Сохраняем в localStorage для личного кабинета
-    saveAppeal({ ...payload, id: result.id, num: result.num, status: 'new', created: new Date().toISOString() });
+    // не сохраняем в localStorage — данные берём с сервера
 
     document.getElementById('successNum').textContent = result.num;
     document.getElementById('formWrap').style.display = 'none';
@@ -1122,7 +1133,7 @@ async function submitForm() {
   } catch {
     // Fallback: сохраняем локально с временным ID
     const num = generateLocalNum();
-    saveAppeal({ ...payload, id: 'local_' + Date.now(), num, status: 'new', created: new Date().toISOString() });
+    saveAppeal({ ...payload, id: 'local_' + Date.now(), num, status: 'new', created: new Date().toISOString(), vk_user_id: window._vkUserId || '' });
     document.getElementById('successNum').textContent = num + ' (отложено)';
     document.getElementById('formWrap').style.display = 'none';
     document.getElementById('successScreen').classList.add('show');
@@ -1308,7 +1319,7 @@ function buildTimeline(a) {
     let cls = '';
     if (i < cur) cls = 'done';
     else if (i === cur) cls = 'active';
-    const dateStr = step.date ? new Date(step.date).toLocaleDateString('ru-RU') : '';
+    const dateStr = step.date ? (step.date.includes('.') ? step.date.split(' ')[0] : new Date(step.date).toLocaleDateString('ru-RU')) : '';
     html += `<div class="tl-item ${cls}">
       <div class="tl-date">${dateStr}</div>
       <div class="tl-text">${step.label}</div>
