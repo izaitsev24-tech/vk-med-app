@@ -1221,8 +1221,13 @@ async function renderCabinet() {
         recipe_date:  r['Дата рецепта'],
         doctor:       r['Врач'],
         pharmacy:     r['Аптека'],
-        description:  r['Описание'],
-        comment:      r['Комментарий оператора'],
+        description:    r['Описание'],
+        comment:        r['Комментарий оператора'],
+        vk_decision:    r['Решение ВК'],
+        for_other:      r['За другого'],
+        patient_fio:    r['ФИО пациента'],
+        patient_dob:    r['Дата рожд. пациента'],
+        patient_relation: r['Родство'],
       }));
     }
   } catch(e) {}
@@ -1297,10 +1302,20 @@ function openDetail(idx) {
           <dt>Дозировка</dt><dd>${a.dosage||'—'}</dd>
           <dt>Рецепт №</dt><dd>${a.recipe_num||'—'}</dd>
           <dt>Выписан</dt><dd>${formatDate(a.recipe_date)}</dd>
+          <dt>Решение ВК</dt><dd>${a.vk_decision === 'Да' ? '✅ Да' : '—'}</dd>
           <dt>Поликлиника</dt><dd>${a.clinic||'—'}</dd>
           <dt>Врач</dt><dd>${a.doctor||'—'}</dd>
           <dt>Аптека</dt><dd>${a.pharmacy||'—'}</dd>
         </dl>
+        <div class="divider"></div>
+${a.for_other === 'Да' ? `
+        <div class="divider"></div>
+        <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">👶 Данные пациента</div>
+        <dl class="info-list">
+          <dt>ФИО</dt><dd>${a.patient_fio||'—'}</dd>
+          <dt>Дата рожд.</dt><dd>${formatDate(a.patient_dob)}</dd>
+          <dt>Родство</dt><dd>${a.patient_relation||'—'}</dd>
+        </dl>` : ''}
         <div class="divider"></div>
         <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">Описание:</div>
         <div style="font-size:13px;line-height:1.6">${a.description||'—'}</div>
