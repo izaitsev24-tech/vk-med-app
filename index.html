@@ -1153,7 +1153,7 @@ async function renderCabinet() {
   let html = `<div style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Всего обращений: <strong>${appeals.length}</strong></div>`;
   appeals.forEach((a, i) => {
     const s = STATUS_CFG[a.status] || STATUS_CFG.new;
-    const date = a.created ? new Date(a.created).toLocaleDateString('ru-RU') : '';
+    const date = a.created ? (a.created.includes('.') ? a.created.split(' ')[0] : new Date(a.created).toLocaleDateString('ru-RU')) : '';
     html += `
       <div class="appeal-card" onclick="openDetail(${i})">
         <div class="appeal-card-top">
