@@ -697,7 +697,7 @@
           </div>
           <div class="field">
             <label>Аптека (название и адрес)</label>
-            <input type="text" id="pharmacy" placeholder="Аптека «Мелодия здоровья», ул. Мира 3">
+            <input type="text" id="pharmacy" placeholder="Аптека №133 (или) Губернские аптеки на Вавилова">
           </div>
         </div>
       </div>
@@ -1138,6 +1138,7 @@ async function renderCabinet() {
     }
   } catch(e) {}
   if (!appeals.length) appeals = getAppeals();
+  window._serverAppeals = appeals;
   const el2 = document.getElementById('cabinetContent');
   if (!appeals.length) {
     el.innerHTML = `
@@ -1177,7 +1178,7 @@ async function renderCabinet() {
 //  ДЕТАЛЬНЫЙ ВИД
 // ════════════════════════════════════════════════════════════
 function openDetail(idx) {
-  const a = getAppeals()[idx];
+  const a = window._serverAppeals ? window._serverAppeals[idx] : getAppeals()[idx];
   if (!a) return;
   const s = STATUS_CFG[a.status] || STATUS_CFG.new;
   document.getElementById('detailTitle').textContent = `Обращение ${a.num || ''}`;
