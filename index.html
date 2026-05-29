@@ -1016,6 +1016,7 @@ async function submitForm() {
     pharmacy:     g('pharmacy'),
     description:  g('description'),
     consent:      true,
+    vk_user_id:   window._vkUserId || '',
     // vk_user_id: window.vk?.getUserID?.() ?? null,  // раскомментировать при интеграции с VK Bridge
   };
 
@@ -1093,6 +1094,11 @@ function saveAppeal(appeal) {
   localStorage.setItem('appeals', JSON.stringify(list));
 }
 
+function statusFromLabel(label) {
+  const map = { 'Новое': 'new', 'В работе': 'work', 'Решено': 'done', 'Закрыто': 'rejected' };
+  return map[label] || 'new';
+}
+
 const STATUS_CFG = {
   new:      { label: 'Новое',    badge: 'badge-new',      icon: '🔵' },
   work:     { label: 'В работе', badge: 'badge-work',     icon: '🟡' },
@@ -1100,9 +1106,39 @@ const STATUS_CFG = {
   rejected: { label: 'Закрыто', badge: 'badge-rejected',  icon: '🔴' },
 };
 
-function renderCabinet() {
-  const appeals = getAppeals();
+async function renderCabinet() {
   const el = document.getElementById('cabinetContent');
+  el.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-title">Загрузка...</div></div>';
+  let appeals = [];
+  try {
+    const vkUserId = window._vkUserId || 'demo';
+    const resp = await fetch(API_BASE + '/appeals?vk_user_id=' + vkUserId);
+    if (resp.ok) {
+      const rows = await resp.json();
+      appeals = rows.map(r => ({
+        num:          r['№ обращения'],
+        created:      r['Дата подачи'],
+        status:       statusFromLabel(r['Статус']),
+        medicine:     r['Лекарство'],
+        problem_type: r['Тип проблемы'],
+        clinic:       r['Поликлиника'],
+        fio:          r['ФИО'],
+        dob:          r['Дата рождения'],
+        phone:        r['Телефон'],
+        address:      r['Адрес регистрации'],
+        benefit:      r['Льготник'],
+        dosage:       r['Дозировка'],
+        recipe_num:   r['Номер рецепта'],
+        recipe_date:  r['Дата рецепта'],
+        doctor:       r['Врач'],
+        pharmacy:     r['Аптека'],
+        description:  r['Описание'],
+        comment:      r['Комментарий оператора'],
+      }));
+    }
+  } catch(e) {}
+  if (!appeals.length) appeals = getAppeals();
+  const el2 = document.getElementById('cabinetContent');
   if (!appeals.length) {
     el.innerHTML = `
       <div class="empty-state">
@@ -1216,7 +1252,25 @@ function closeDetail(e) {
 // ════════════════════════════════════════════════════════════
 //  VK BRIDGE — инициализация (раскомментировать в проде)
 // ════════════════════════════════════════════════════════════
-if (window.vkBridge) { window.vkBridge.send("VKWebAppInit"); } else { const s = document.createElement("script"); s.src = "https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"; s.onload = () => vkBridge.send("VKWebAppInit"); document.head.appendChild(s); }
+const initVK = () => {
+  if (window.vkBridge) {
+    vkBridge.send("VKWebAppInit");
+    vkBridge.send("VKWebAppGetUserInfo").then(data => {
+      window._vkUserId = String(data.id);
+    }).catch(() => { window._vkUserId = 'demo'; });
+  } else {
+    const s = document.createElement("script");
+    s.src = "https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js";
+    s.onload = () => {
+      vkBridge.send("VKWebAppInit");
+      vkBridge.send("VKWebAppGetUserInfo").then(data => {
+        window._vkUserId = String(data.id);
+      }).catch(() => { window._vkUserId = 'demo'; });
+    };
+    document.head.appendChild(s);
+  }
+};
+initVK();
 
 // ════════════════════════════════════════════════════════════
 //  ИНИЦИАЛИЗАЦИЯ
