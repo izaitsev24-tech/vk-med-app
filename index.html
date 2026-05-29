@@ -530,7 +530,7 @@
 <!-- ── Навигация ── -->
 <nav class="nav-tabs">
   <button class="nav-tab active" data-page="page-form" onclick="switchPage('page-form', this)">📝 Подать обращение</button>
-  <button class="nav-tab" data-page="page-cabinet" onclick="switchPage('page-cabinet', this)">📂 Мои обращения</button>
+  <button class="nav-tab" data-page="page-cabinet" onclick="switchPage('page-cabinet', this)">📂 Мои обращения <span id="cabinetBadge" style="display:none;background:#C0392B;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:4px">!</span></button>
   <button class="nav-tab" data-page="page-info" onclick="switchPage('page-info', this)">ℹ️ Справка</button>
 </nav>
 
@@ -851,12 +851,32 @@ const API_BASE = 'https://vk-med-backend-production.up.railway.app/api'; // ← 
 // ════════════════════════════════════════════════════════════
 //  НАВИГАЦИЯ
 // ════════════════════════════════════════════════════════════
+function checkStatusChanges(appeals) {
+  const saved = JSON.parse(localStorage.getItem('appeal_statuses') || '{}');
+  let changed = false;
+  appeals.forEach(a => {
+    if (a.num && saved[a.num] && saved[a.num] !== a.status) changed = true;
+  });
+  document.getElementById('cabinetBadge').style.display = changed ? 'inline' : 'none';
+}
+
+function saveSeenStatuses(appeals) {
+  const saved = {};
+  appeals.forEach(a => { if (a.num) saved[a.num] = a.status; });
+  localStorage.setItem('appeal_statuses', JSON.stringify(saved));
+  document.getElementById('cabinetBadge').style.display = 'none';
+}
+
 function switchPage(pageId, tabEl) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById(pageId).classList.add('active');
   if (tabEl) tabEl.classList.add('active');
-  if (pageId === 'page-cabinet') renderCabinet();
+  if (pageId === 'page-cabinet') {
+    renderCabinet().then(() => {
+      if (window._serverAppeals) saveSeenStatuses(window._serverAppeals);
+    });
+  }
 }
 
 function showCabinet() {
@@ -1139,6 +1159,7 @@ async function renderCabinet() {
   } catch(e) {}
   if (!appeals.length) appeals = getAppeals();
   window._serverAppeals = appeals;
+  checkStatusChanges(appeals);
   const el2 = document.getElementById('cabinetContent');
   if (!appeals.length) {
     el.innerHTML = `
