@@ -1062,10 +1062,13 @@ function g(id) {
 
 function formatDate(s) {
   if (!s) return '—';
-  if (s.includes('.')) return s.split(' ')[0]; // уже в формате дд.мм.гггг
-  const d = new Date(s);
-  if (isNaN(d)) return s;
-  return d.toLocaleDateString('ru-RU');
+  if (s.includes('T')) return new Date(s).toLocaleDateString('ru-RU');
+  if (s.includes('.')) return s.split(' ')[0];
+  if (s.includes('-') && s.length === 10) {
+    const [y,m,d] = s.split('-');
+    return d + '.' + m + '.' + y;
+  }
+  return s;
 }
 
 // ════════════════════════════════════════════════════════════
