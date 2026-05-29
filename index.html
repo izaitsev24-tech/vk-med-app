@@ -1216,8 +1216,7 @@ function closeDetail(e) {
 // ════════════════════════════════════════════════════════════
 //  VK BRIDGE — инициализация (раскомментировать в проде)
 // ════════════════════════════════════════════════════════════
-// import bridge from '@vkontakte/vk-bridge';
-// bridge.send('VKWebAppInit');
+if (window.vkBridge) { window.vkBridge.send("VKWebAppInit"); } else { const s = document.createElement("script"); s.src = "https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"; s.onload = () => vkBridge.send("VKWebAppInit"); document.head.appendChild(s); }
 
 // ════════════════════════════════════════════════════════════
 //  ИНИЦИАЛИЗАЦИЯ
