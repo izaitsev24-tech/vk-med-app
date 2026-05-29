@@ -599,6 +599,39 @@
             <input type="text" id="address" placeholder="г. Красноярск, ул. Ленина, д. 1, кв. 1">
             <div class="field-error" id="err-address">Укажите адрес регистрации</div>
           </div>
+          <div class="field" style="margin-top:4px">
+            <label class="consent-check" style="cursor:pointer">
+              <input type="checkbox" id="for_other" onchange="togglePatientFields()">
+              <span>Обращение подаётся за другого человека (ребёнок, подопечный)</span>
+            </label>
+          </div>
+
+          <div id="patientFields" style="display:none">
+            <div class="info-block" style="margin-top:8px">
+              <div class="info-block-icon">👶</div>
+              <div>Укажите данные пациента (того, кому нужно лекарство)</div>
+            </div>
+            <div class="field">
+              <label>ФИО пациента <span class="req">*</span></label>
+              <input type="text" id="patient_fio" placeholder="Иванов Иван Иванович">
+            </div>
+            <div class="field">
+              <label>Дата рождения пациента <span class="req">*</span></label>
+              <input type="date" id="patient_dob">
+            </div>
+            <div class="field">
+              <label>Степень родства / представительство</label>
+              <select id="patient_relation">
+                <option value="">— Выберите —</option>
+                <option>Мать</option>
+                <option>Отец</option>
+                <option>Опекун</option>
+                <option>Законный представитель</option>
+                <option>Другое</option>
+              </select>
+            </div>
+          </div>
+
           <div class="field">
             <label>Статус льготника</label>
             <select id="benefit_status">
@@ -655,23 +688,31 @@
         <div class="card-header">💊 Сведения о лекарстве</div>
         <div class="card-body">
           <div class="field">
-            <label>Название лекарства <span class="req">*</span></label>
-            <input type="text" id="medicine" placeholder="Например: Метформин 500 мг">
+            <label>Название лекарства (так, как написано в рецепте) <span class="req">*</span></label>
+            <input type="text" id="medicine" placeholder="Например: Метформин">
             <div class="field-error" id="err-medicine">Укажите название лекарства</div>
           </div>
-          <div class="row2">
-            <div class="field">
-              <label>Дозировка</label>
-              <input type="text" id="dosage" placeholder="500 мг, 2 р/день">
-            </div>
-            <div class="field">
-              <label>Номер рецепта</label>
-              <input type="text" id="recipe_num" placeholder="Если есть">
-            </div>
-          </div>
           <div class="field">
-            <label>Дата выписки рецепта</label>
-            <input type="date" id="recipe_date">
+            <label>Дозировка</label>
+            <input type="text" id="dosage" placeholder="500 мг, 2 р/день">
+          </div>
+          <div class="field" style="margin-top:4px">
+            <label class="consent-check" style="cursor:pointer">
+              <input type="checkbox" id="vk_decision">
+              <span>Есть решение врачебной комиссии о назначении препарата по торговому наименованию</span>
+            </label>
+          </div>
+          <div id="recipeFields" style="display:none">
+            <div class="row2">
+              <div class="field">
+                <label>Номер рецепта</label>
+                <input type="text" id="recipe_num" placeholder="Если есть">
+              </div>
+              <div class="field">
+                <label>Дата выписки рецепта</label>
+                <input type="date" id="recipe_date">
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -851,6 +892,11 @@ const API_BASE = 'https://vk-med-backend-production.up.railway.app/api'; // ← 
 // ════════════════════════════════════════════════════════════
 //  НАВИГАЦИЯ
 // ════════════════════════════════════════════════════════════
+function togglePatientFields() {
+  const checked = document.getElementById('for_other').checked;
+  document.getElementById('patientFields').style.display = checked ? 'block' : 'none';
+}
+
 function checkStatusChanges(appeals) {
   const saved = JSON.parse(localStorage.getItem('appeal_statuses') || '{}');
   let changed = false;
@@ -1005,8 +1051,10 @@ function g(id) {
 
 function formatDate(s) {
   if (!s) return '—';
-  const [y,m,d] = s.split('-');
-  return `${d}.${m}.${y}`;
+  if (s.includes('.')) return s.split(' ')[0]; // уже в формате дд.мм.гггг
+  const d = new Date(s);
+  if (isNaN(d)) return s;
+  return d.toLocaleDateString('ru-RU');
 }
 
 // ════════════════════════════════════════════════════════════
@@ -1035,8 +1083,13 @@ async function submitForm() {
     doctor:       g('doctor'),
     pharmacy:     g('pharmacy'),
     description:  g('description'),
-    consent:      true,
-    vk_user_id:   window._vkUserId || '',
+    consent:        true,
+    vk_user_id:     window._vkUserId || '',
+    for_other:      document.getElementById('for_other').checked,
+    patient_fio:    g('patient_fio'),
+    patient_dob:    g('patient_dob'),
+    patient_relation: g('patient_relation'),
+    vk_decision:    document.getElementById('vk_decision').checked,
     // vk_user_id: window.vk?.getUserID?.() ?? null,  // раскомментировать при интеграции с VK Bridge
   };
 
