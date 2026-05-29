@@ -892,6 +892,13 @@ const API_BASE = 'https://vk-med-backend-production.up.railway.app/api'; // ← 
 // ════════════════════════════════════════════════════════════
 //  НАВИГАЦИЯ
 // ════════════════════════════════════════════════════════════
+function updateRecipeFields() {
+  const chosen = document.querySelector('input[name=problem]:checked');
+  const show = chosen && (chosen.value === 'Не выдают лекарства' || chosen.value === 'Другое');
+  const el = document.getElementById('recipeFields');
+  if (el) el.style.display = show ? 'block' : 'none';
+}
+
 function togglePatientFields() {
   const checked = document.getElementById('for_other').checked;
   document.getElementById('patientFields').style.display = checked ? 'block' : 'none';
