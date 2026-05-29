@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Лекарственное обеспечение — Красноярский край</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:          #F4F1EC;
+    --surface:     #FFFFFF;
+    --surface2:    #EDE9E1;
+    --border:      #D8D2C6;
+    --text:        #1C1917;
+    --text-muted:  #78716C;
+    --accent:      #C0392B;
+    --accent-dark: #96281B;
+    --accent-bg:   #FDF2F1;
+    --green:       #16A34A;
+    --green-bg:    #F0FDF4;
+    --orange:      #D97706;
+    --orange-bg:   #FFFBEB;
+    --blue:        #1D4ED8;
+    --blue-bg:     #EFF6FF;
+    --shadow:      0 2px 12px rgba(28,25,23,.08);
+    --shadow-lg:   0 8px 32px rgba(28,25,23,.12);
+    --r:           12px;
+    --r-sm:        8px;
+    --font:        'Geologica', sans-serif;
+    --font-serif:  'PT Serif', serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 15px; -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* ── Шапка ── */
+  .app-header {
+    background: var(--accent);
+    color: #fff;
+    padding: 14px 16px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(192,57,43,.3);
+  }
+  .header-icon { font-size: 22px; flex-shrink: 0; }
+  .header-title { font-size: 15px; font-weight: 600; line-height: 1.2; }
+  .header-sub   { font-size: 11px; opacity: .8; margin-top: 1px; }
+  .header-spacer { flex: 1; }
+  .header-btn {
+    background: rgba(255,255,255,.18);
+    border: none;
+    color: #fff;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background .18s;
+    white-space: nowrap;
+  }
+  .header-btn:hover { background: rgba(255,255,255,.28); }
+  .header-btn.active {
+    background: #fff;
+    color: var(--accent);
+  }
+
+  /* ── Навигация ── */
+  .nav-tabs {
+    display: flex;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 8px;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .nav-tab {
+    flex-shrink: 0;
+    padding: 12px 14px 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color .18s, border-color .18s;
+    font-family: var(--font);
+  }
+  .nav-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* ── Страницы ── */
+  .page { display: none; padding: 16px; }
+  .page.active { display: block; }
+
+  /* ── Карточки ── */
+  .card {
+    background: var(--surface);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 14px 16px 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-body { padding: 12px 16px 16px; }
+
+  /* ── Форма ── */
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+    letter-spacing: .03em;
+  }
+  .field label .req { color: var(--accent); margin-left: 2px; }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    font-family: var(--font);
+    font-size: 15px;
+    color: var(--text);
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color .18s, box-shadow .18s;
+    -webkit-appearance: none;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(192,57,43,.1);
+    background: var(--surface);
+  }
+  .field input.error,
+  .field select.error,
+  .field textarea.error {
+    border-color: var(--accent);
+    background: var(--accent-bg);
+  }
+  .field-error {
+    font-size: 11px;
+    color: var(--accent);
+    margin-top: 4px;
+    display: none;
+  }
+  .field-error.show { display: block; }
+  .field textarea { resize: vertical; min-height: 90px; }
+  .field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2378716C' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+
+  /* Радио-группы */
+  .radio-group { display: flex; flex-direction: column; gap: 8px; }
+  .radio-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    transition: border-color .18s, background .18s;
+  }
+  .radio-item:has(input:checked) {
+    border-color: var(--accent);
+    background: var(--accent-bg);
+  }
+  .radio-item input[type=radio] { margin-top: 2px; accent-color: var(--accent); flex-shrink: 0; }
+  .radio-label { font-size: 14px; line-height: 1.4; }
+  .radio-label small { display: block; font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+
+  /* Загрузка фото */
+  .upload-area {
+    border: 2px dashed var(--border);
+    border-radius: var(--r-sm);
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .18s, background .18s;
+    background: var(--bg);
+  }
+  .upload-area:hover { border-color: var(--accent); background: var(--accent-bg); }
+  .upload-area.has-file { border-color: var(--green); background: var(--green-bg); border-style: solid; }
+  .upload-icon { font-size: 28px; margin-bottom: 6px; }
+  .upload-text { font-size: 13px; color: var(--text-muted); }
+  .upload-text strong { color: var(--text); }
+  .upload-area input[type=file] { display: none; }
+  .upload-preview { margin-top: 10px; font-size: 12px; color: var(--green); font-weight: 500; }
+
+  /* Согласие */
+  .consent-box {
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 14px;
+    max-height: 100px;
+    overflow-y: auto;
+  }
+  .consent-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .consent-check input { margin-top: 2px; accent-color: var(--accent); flex-shrink: 0; }
+  .consent-check span { font-size: 13px; line-height: 1.4; }
+
+  /* Кнопки */
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: var(--r-sm);
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform .12s, box-shadow .12s, background .18s;
+  }
+  .btn:active { transform: scale(.98); }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(192,57,43,.3);
+  }
+  .btn-primary:hover { background: var(--accent-dark); }
+  .btn-primary:disabled {
+    background: var(--border);
+    color: var(--text-muted);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+  .btn-ghost {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1.5px solid var(--border);
+  }
+  .btn-ghost:hover { background: var(--border); }
+
+  /* ── Статус-бейджи ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge-new      { background: var(--blue-bg);   color: var(--blue); }
+  .badge-work     { background: var(--orange-bg);  color: var(--orange); }
+  .badge-done     { background: var(--green-bg);   color: var(--green); }
+  .badge-rejected { background: var(--accent-bg);  color: var(--accent); }
+
+  /* ── Карточки обращений ── */
+  .appeal-card {
+    background: var(--surface);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
+    margin-bottom: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: box-shadow .18s;
+  }
+  .appeal-card:hover { box-shadow: var(--shadow-lg); }
+  .appeal-card-top {
+    padding: 12px 14px 10px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .appeal-num { font-size: 13px; font-weight: 700; color: var(--accent); }
+  .appeal-date { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .appeal-medicine { font-size: 14px; font-weight: 500; margin-top: 4px; }
+  .appeal-type { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .appeal-card-bottom {
+    padding: 8px 14px 12px;
+    border-top: 1px solid var(--surface2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .appeal-status-text { font-size: 12px; color: var(--text-muted); }
+
+  /* ── Детальный вид обращения ── */
+  .detail-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(28,25,23,.5);
+    z-index: 200;
+    overflow-y: auto;
+    padding: 20px 0 0;
+  }
+  .detail-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+  .detail-sheet {
+    background: var(--bg);
+    border-radius: var(--r) var(--r) 0 0;
+    width: 100%;
+    max-width: 480px;
+    margin-top: auto;
+    min-height: calc(100vh - 20px);
+    padding: 0 0 32px;
+  }
+  .detail-handle {
+    width: 36px; height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 12px auto 0;
+  }
+  .detail-header {
+    padding: 16px 16px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .detail-close {
+    background: var(--surface2);
+    border: none;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--text-muted);
+  }
+  .detail-title { font-size: 16px; font-weight: 600; }
+  .detail-body { padding: 16px; }
+
+  /* Таймлайн статуса */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 9px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: var(--border);
+  }
+  .tl-item {
+    position: relative;
+    margin-bottom: 16px;
+  }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -23px; top: 4px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--border);
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--border);
+  }
+  .tl-item.active::before {
+    background: var(--accent);
+    box-shadow: 0 0 0 3px rgba(192,57,43,.2);
+  }
+  .tl-item.done::before { background: var(--green); }
+  .tl-date { font-size: 11px; color: var(--text-muted); }
+  .tl-text { font-size: 14px; font-weight: 500; margin-top: 2px; }
+  .tl-comment { font-size: 12px; color: var(--text-muted); margin-top: 3px; font-style: italic; }
+
+  /* ── Успех ── */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 32px 16px;
+  }
+  .success-screen.show { display: block; }
+  .success-icon { font-size: 56px; margin-bottom: 12px; }
+  .success-title {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: var(--green);
+  }
+  .success-num {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 16px 0 8px;
+  }
+  .success-text { font-size: 14px; color: var(--text-muted); line-height: 1.5; max-width: 280px; margin: 0 auto 24px; }
+
+  /* ── Пустое состояние ── */
+  .empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--text-muted);
+  }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .empty-text { font-size: 13px; line-height: 1.5; }
+
+  /* ── Info-блок ── */
+  .info-block {
+    background: var(--blue-bg);
+    border: 1px solid #BFDBFE;
+    border-radius: var(--r-sm);
+    padding: 10px 12px;
+    font-size: 12px;
+    color: #1E40AF;
+    line-height: 1.5;
+    margin-bottom: 14px;
+    display: flex;
+    gap: 8px;
+  }
+  .info-block-icon { flex-shrink: 0; font-size: 14px; }
+
+  /* ── Шаг-индикатор ── */
+  .step-indicator {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+  }
+  .step-dot {
+    height: 3px;
+    border-radius: 2px;
+    background: var(--border);
+    flex: 1;
+    transition: background .3s;
+  }
+  .step-dot.active { background: var(--accent); }
+  .step-dot.done   { background: var(--accent); opacity: .4; }
+
+  /* ── Анимации ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .page.active { animation: fadeUp .22s ease; }
+
+  .spinner {
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+    display: none;
+  }
+  .btn.loading .spinner { display: block; }
+  .btn.loading .btn-label { opacity: 0; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 12px 0;
+  }
+
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* Тег */
+  .tag {
+    display: inline-block;
+    background: var(--surface2);
+    color: var(--text-muted);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  /* DL */
+  dl.info-list { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; }
+  dl.info-list dt { font-size: 12px; color: var(--text-muted); padding-top: 2px; white-space: nowrap; }
+  dl.info-list dd { font-size: 13px; font-weight: 500; }
+</style>
+</head>
+<body>
+
+<!-- ── Шапка ── -->
+<header class="app-header">
+  <div class="header-icon">🏥</div>
+  <div>
+    <div class="header-title">Лекарственное обеспечение</div>
+    <div class="header-sub">Красноярский край</div>
+  </div>
+  <div class="header-spacer"></div>
+  <button class="header-btn" id="headerCabinetBtn" onclick="showCabinet()">Мои обращения</button>
+</header>
+
+<!-- ── Навигация ── -->
+<nav class="nav-tabs">
+  <button class="nav-tab active" data-page="page-form" onclick="switchPage('page-form', this)">📝 Подать обращение</button>
+  <button class="nav-tab" data-page="page-cabinet" onclick="switchPage('page-cabinet', this)">📂 Мои обращения</button>
+  <button class="nav-tab" data-page="page-info" onclick="switchPage('page-info', this)">ℹ️ Справка</button>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════
+     СТРАНИЦА 1 — ФОРМА ОБРАЩЕНИЯ
+════════════════════════════════════════════════════════════════ -->
+<div class="page active" id="page-form">
+
+  <!-- Успех-экран -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">✅</div>
+    <div class="success-title">Обращение зарегистрировано</div>
+    <div class="success-num" id="successNum">#24-0001</div>
+    <div class="success-text">
+      Специалисты рассмотрят ваше обращение в установленные сроки.
+      Вы можете отслеживать статус в разделе «Мои обращения».
+    </div>
+    <button class="btn btn-primary" onclick="resetForm()" style="max-width:280px;margin:0 auto 12px">
+      📋 Подать ещё одно обращение
+    </button>
+    <button class="btn btn-ghost" onclick="switchPage('page-cabinet', document.querySelector('[data-page=page-cabinet]'))" style="max-width:280px;margin:0 auto">
+      📂 Перейти к моим обращениям
+    </button>
+  </div>
+
+  <!-- Форма -->
+  <div id="formWrap">
+    <div class="info-block">
+      <div class="info-block-icon">💡</div>
+      <div>Заполните форму — обращение будет зарегистрировано и передано специалистам Минздрава Красноярского края.</div>
+    </div>
+
+    <!-- Шаг-индикатор -->
+    <div class="step-indicator">
+      <div class="step-dot active" id="dot1"></div>
+      <div class="step-dot" id="dot2"></div>
+      <div class="step-dot" id="dot3"></div>
+      <div class="step-dot" id="dot4"></div>
+    </div>
+
+    <!-- ШАГ 1: Личные данные -->
+    <div id="step1">
+      <div class="card">
+        <div class="card-header">👤 Личные данные</div>
+        <div class="card-body">
+          <div class="field">
+            <label>Фамилия, имя, отчество <span class="req">*</span></label>
+            <input type="text" id="fio" placeholder="Иванова Мария Петровна" inputmode="text" autocomplete="name">
+            <div class="field-error" id="err-fio">Введите ФИО полностью</div>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label>Дата рождения <span class="req">*</span></label>
+              <input type="date" id="dob" max="">
+              <div class="field-error" id="err-dob">Укажите дату рождения</div>
+            </div>
+            <div class="field">
+              <label>Контактный телефон <span class="req">*</span></label>
+              <input type="tel" id="phone" placeholder="+7 999 123-45-67" inputmode="tel">
+              <div class="field-error" id="err-phone">Введите номер телефона</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>СНИЛС</label>
+            <input type="text" id="snils" placeholder="123-456-789 00" inputmode="numeric" maxlength="14">
+          </div>
+          <div class="field">
+            <label>Адрес регистрации <span class="req">*</span></label>
+            <input type="text" id="address" placeholder="г. Красноярск, ул. Ленина, д. 1, кв. 1">
+            <div class="field-error" id="err-address">Укажите адрес регистрации</div>
+          </div>
+          <div class="field">
+            <label>Статус льготника</label>
+            <select id="benefit_status">
+              <option value="">— Не являюсь льготником —</option>
+              <option value="Инвалид 1 группы">Инвалид I группы</option>
+              <option value="Инвалид 2 группы">Инвалид II группы</option>
+              <option value="Инвалид 3 группы">Инвалид III группы</option>
+              <option value="Ребёнок-инвалид">Ребёнок-инвалид</option>
+              <option value="Ветеран ВОВ">Ветеран ВОВ</option>
+              <option value="Ветеран боевых действий">Ветеран боевых действий</option>
+              <option value="Участник СВО">Участник СВО / член семьи</option>
+              <option value="Федеральный льготник">Федеральный льготник (иное)</option>
+              <option value="Региональный льготник">Региональный льготник</option>
+              <option value="Другое">Другое</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="nextStep(2)">Далее →</button>
+    </div>
+
+    <!-- ШАГ 2: Проблема -->
+    <div id="step2" style="display:none">
+      <div class="card">
+        <div class="card-header">⚠️ Тип проблемы</div>
+        <div class="card-body">
+          <div class="radio-group" id="problem_type">
+            <label class="radio-item">
+              <input type="radio" name="problem" value="Не выписывают рецепт">
+              <div class="radio-label">
+                💊 Не выписывают рецепт
+                <small>Врач отказывает в выписке льготного рецепта</small>
+              </div>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="problem" value="Нет лекарства в аптеке">
+              <div class="radio-label">
+                🏪 Нет лекарства в аптеке
+                <small>Рецепт есть, но лекарство отсутствует или заканчивается</small>
+              </div>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="problem" value="Отказ в отпуске лекарства">
+              <div class="radio-label">
+                🚫 Отказ в отпуске лекарства
+                <small>Аптека отказывает несмотря на действующий рецепт</small>
+              </div>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="problem" value="Другое">
+              <div class="radio-label">
+                📝 Другое
+                <small>Иная проблема с лекарственным обеспечением</small>
+              </div>
+            </label>
+          </div>
+          <div class="field-error" id="err-problem" style="margin-top:8px">Выберите тип проблемы</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">💊 Сведения о лекарстве</div>
+        <div class="card-body">
+          <div class="field">
+            <label>Название лекарства <span class="req">*</span></label>
+            <input type="text" id="medicine" placeholder="Например: Метформин 500 мг">
+            <div class="field-error" id="err-medicine">Укажите название лекарства</div>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label>Дозировка</label>
+              <input type="text" id="dosage" placeholder="500 мг, 2 р/день">
+            </div>
+            <div class="field">
+              <label>Номер рецепта</label>
+              <input type="text" id="recipe_num" placeholder="Если есть">
+            </div>
+          </div>
+          <div class="field">
+            <label>Дата выписки рецепта</label>
+            <input type="date" id="recipe_date">
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" style="flex:0 0 80px" onclick="prevStep(1)">← Назад</button>
+        <button class="btn btn-primary" onclick="nextStep(3)">Далее →</button>
+      </div>
+    </div>
+
+    <!-- ШАГ 3: Медорганизация и описание -->
+    <div id="step3" style="display:none">
+      <div class="card">
+        <div class="card-header">🏥 Медицинская организация</div>
+        <div class="card-body">
+          <div class="field">
+            <label>Поликлиника / больница <span class="req">*</span></label>
+            <input type="text" id="clinic" placeholder="КГБУЗ «Городская поликлиника № 1»">
+            <div class="field-error" id="err-clinic">Укажите медицинскую организацию</div>
+          </div>
+          <div class="field">
+            <label>Врач (ФИО или должность)</label>
+            <input type="text" id="doctor" placeholder="Терапевт Петрова А.В.">
+          </div>
+          <div class="field">
+            <label>Аптека (название и адрес)</label>
+            <input type="text" id="pharmacy" placeholder="Аптека «Мелодия здоровья», ул. Мира 3">
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">📝 Описание проблемы</div>
+        <div class="card-body">
+          <div class="field">
+            <label>Опишите ситуацию своими словами <span class="req">*</span></label>
+            <textarea id="description" placeholder="Что произошло? Когда отказали? Какую причину назвали?&#10;&#10;Чем подробнее — тем быстрее рассмотрят."></textarea>
+            <div class="field-error" id="err-description">Опишите проблему подробнее</div>
+          </div>
+          <div class="field">
+            <label>Фото рецепта или документа об отказе</label>
+            <div class="upload-area" id="uploadArea" onclick="document.getElementById('photoInput').click()">
+              <input type="file" id="photoInput" accept="image/*,application/pdf" multiple onchange="handleFileUpload(this)">
+              <div class="upload-icon">📎</div>
+              <div class="upload-text"><strong>Нажмите для загрузки</strong><br>JPG, PNG, PDF — до 10 МБ</div>
+              <div class="upload-preview" id="uploadPreview"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" style="flex:0 0 80px" onclick="prevStep(2)">← Назад</button>
+        <button class="btn btn-primary" onclick="nextStep(4)">Далее →</button>
+      </div>
+    </div>
+
+    <!-- ШАГ 4: Согласие и отправка -->
+    <div id="step4" style="display:none">
+      <div class="card">
+        <div class="card-header">📋 Проверка и отправка</div>
+        <div class="card-body">
+          <div id="summaryBlock" style="margin-bottom:16px"></div>
+          <div class="divider"></div>
+          <div class="consent-box">
+            В соответствии с Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных», 
+            я даю согласие на обработку моих персональных данных, указанных в данной форме, 
+            оператором — Министерством здравоохранения Красноярского края (660009, г. Красноярск, 
+            ул. Красной Армии, 3) в целях рассмотрения обращения по вопросам лекарственного 
+            обеспечения. Обработка включает: сбор, запись, хранение, уточнение, использование 
+            персональных данных. Согласие действует до его отзыва.
+          </div>
+          <label class="consent-check">
+            <input type="checkbox" id="consent">
+            <span>Я ознакомлен(а) с условиями обработки персональных данных и даю своё согласие</span>
+          </label>
+          <div class="field-error" id="err-consent" style="margin-top:8px">Необходимо дать согласие</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" style="flex:0 0 80px" onclick="prevStep(3)">← Назад</button>
+        <button class="btn btn-primary" id="submitBtn" onclick="submitForm()">
+          <span class="spinner"></span>
+          <span class="btn-label">📨 Отправить обращение</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     СТРАНИЦА 2 — ЛИЧНЫЙ КАБИНЕТ
+════════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-cabinet">
+  <div id="cabinetContent">
+    <!-- Заполняется JS -->
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     СТРАНИЦА 3 — СПРАВКА
+════════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-info">
+  <div class="card">
+    <div class="card-header">📞 Контакты</div>
+    <div class="card-body">
+      <div class="field">
+        <div style="font-size:14px;line-height:1.6">
+          <strong>Министерство здравоохранения Красноярского края</strong><br>
+          660009, г. Красноярск, ул. Красной Армии, 3<br>
+          Тел.: <a href="tel:83912117503" style="color:var(--accent)">8 (391) 211-75-03</a><br>
+          Горячая линия: <a href="tel:88002010303" style="color:var(--accent)">8-800-201-03-03</a> (бесплатно)
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">❓ Часто задаваемые вопросы</div>
+    <div class="card-body">
+      <details style="margin-bottom:12px">
+        <summary style="cursor:pointer;font-size:14px;font-weight:500;padding:4px 0">Когда рассмотрят моё обращение?</summary>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:8px;line-height:1.5">В соответствии с законодательством письменные обращения рассматриваются в течение 30 дней со дня регистрации. Уведомление придёт в VK.</p>
+      </details>
+      <details style="margin-bottom:12px">
+        <summary style="cursor:pointer;font-size:14px;font-weight:500;padding:4px 0">Какие лекарства выдаются бесплатно?</summary>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:8px;line-height:1.5">Перечень льготных лекарств утверждён Приказом Минздрава России. В него входят препараты для лечения диабета, онкологии, сердечно-сосудистых и других социально значимых заболеваний.</p>
+      </details>
+      <details>
+        <summary style="cursor:pointer;font-size:14px;font-weight:500;padding:4px 0">Что делать, если рецепт просрочен?</summary>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:8px;line-height:1.5">Срок действия рецепта на льготные препараты — 30 дней (хронические болезни — 90 дней). Для продления обратитесь к лечащему врачу.</p>
+      </details>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">📊 Статусы обращений</div>
+    <div class="card-body">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="badge badge-new">🔵 Новое</span>
+          <span style="font-size:13px;color:var(--text-muted)">Обращение принято, ожидает назначения</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="badge badge-work">🟡 В работе</span>
+          <span style="font-size:13px;color:var(--text-muted)">Специалист ведёт проверку</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="badge badge-done">🟢 Решено</span>
+          <span style="font-size:13px;color:var(--text-muted)">Обращение рассмотрено, проблема решена</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="badge badge-rejected">🔴 Закрыто</span>
+          <span style="font-size:13px;color:var(--text-muted)">Рассмотрено, требует иных мер</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Детальное обращение (overlay) ── -->
+<div class="detail-overlay" id="detailOverlay" onclick="closeDetail(event)">
+  <div class="detail-sheet" onclick="event.stopPropagation()">
+    <div class="detail-handle"></div>
+    <div class="detail-header">
+      <button class="detail-close" onclick="closeDetail()">✕</button>
+      <div class="detail-title" id="detailTitle">Обращение #24-0001</div>
+    </div>
+    <div class="detail-body" id="detailBody"></div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  КОНФИГУРАЦИЯ
+// ════════════════════════════════════════════════════════════
+const API_BASE = 'https://vk-med-backend-production.up.railway.app/api'; // ← замените на адрес вашего бэкенда
+
+// ════════════════════════════════════════════════════════════
+//  НАВИГАЦИЯ
+// ════════════════════════════════════════════════════════════
+function switchPage(pageId, tabEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  if (tabEl) tabEl.classList.add('active');
+  if (pageId === 'page-cabinet') renderCabinet();
+}
+
+function showCabinet() {
+  switchPage('page-cabinet', document.querySelector('[data-page=page-cabinet]'));
+}
+
+// ════════════════════════════════════════════════════════════
+//  ШАГ-ЛОГИКА ФОРМЫ
+// ════════════════════════════════════════════════════════════
+let currentStep = 1;
+
+function showStep(n) {
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById('step' + i);
+    if (el) el.style.display = i === n ? 'block' : 'none';
+    const dot = document.getElementById('dot' + i);
+    if (dot) {
+      dot.classList.remove('active', 'done');
+      if (i === n) dot.classList.add('active');
+      else if (i < n) dot.classList.add('done');
+    }
+  }
+  currentStep = n;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextStep(n) {
+  if (!validateStep(currentStep)) return;
+  if (n === 4) buildSummary();
+  showStep(n);
+}
+
+function prevStep(n) { showStep(n); }
+
+// ════════════════════════════════════════════════════════════
+//  ВАЛИДАЦИЯ
+// ════════════════════════════════════════════════════════════
+function setErr(id, show) {
+  const inp = document.getElementById(id);
+  const err = document.getElementById('err-' + id);
+  if (inp)  inp.classList.toggle('error', show);
+  if (err) { err.classList.toggle('show', show); }
+  return show;
+}
+
+function validateStep(step) {
+  let ok = true;
+  if (step === 1) {
+    if (!v('fio', s => s.trim().split(/\s+/).length >= 2))    ok = false;
+    if (!v('dob', s => !!s))                                   ok = false;
+    if (!v('phone', s => s.replace(/\D/g,'').length >= 10))    ok = false;
+    if (!v('address', s => s.trim().length >= 5))              ok = false;
+  }
+  if (step === 2) {
+    const chosen = document.querySelector('input[name=problem]:checked');
+    if (!chosen) { setErr('problem', true); ok = false; } else setErr('problem', false);
+    if (!v('medicine', s => s.trim().length >= 2)) ok = false;
+  }
+  if (step === 3) {
+    if (!v('clinic',      s => s.trim().length >= 3)) ok = false;
+    if (!v('description', s => s.trim().length >= 15)) ok = false;
+  }
+  if (step === 4) {
+    const c = document.getElementById('consent');
+    if (!c.checked) { setErr('consent', true); ok = false; } else setErr('consent', false);
+  }
+  return ok;
+}
+
+function v(id, fn) {
+  const el = document.getElementById(id);
+  if (!el) return true;
+  const valid = fn(el.value);
+  setErr(id, !valid);
+  return valid;
+}
+
+// ════════════════════════════════════════════════════════════
+//  ЗАГРУЗКА ФАЙЛА
+// ════════════════════════════════════════════════════════════
+let uploadedFiles = [];
+
+function handleFileUpload(input) {
+  uploadedFiles = Array.from(input.files);
+  const area = document.getElementById('uploadArea');
+  const prev = document.getElementById('uploadPreview');
+  if (uploadedFiles.length) {
+    area.classList.add('has-file');
+    prev.textContent = uploadedFiles.map(f => `✓ ${f.name}`).join(', ');
+  } else {
+    area.classList.remove('has-file');
+    prev.textContent = '';
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+//  СВОДКА (шаг 4)
+// ════════════════════════════════════════════════════════════
+function buildSummary() {
+  const problem = (document.querySelector('input[name=problem]:checked') || {}).value || '—';
+  const rows = [
+    ['ФИО', g('fio')],
+    ['Дата рождения', formatDate(g('dob'))],
+    ['Телефон', g('phone')],
+    ['Адрес', g('address')],
+    ['Льготник', g('benefit_status') || 'Нет'],
+    ['Тип проблемы', problem],
+    ['Лекарство', g('medicine')],
+    ['Дозировка', g('dosage') || '—'],
+    ['Поликлиника', g('clinic')],
+    ['Врач', g('doctor') || '—'],
+    ['Аптека', g('pharmacy') || '—'],
+  ];
+  let html = '<dl class="info-list">';
+  rows.forEach(([k, v]) => { html += `<dt>${k}</dt><dd>${v || '—'}</dd>`; });
+  html += '</dl>';
+  if (uploadedFiles.length)
+    html += `<div style="margin-top:10px;font-size:12px;color:var(--green)">📎 Файлы: ${uploadedFiles.map(f=>f.name).join(', ')}</div>`;
+  document.getElementById('summaryBlock').innerHTML = html;
+}
+
+function g(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+function formatDate(s) {
+  if (!s) return '—';
+  const [y,m,d] = s.split('-');
+  return `${d}.${m}.${y}`;
+}
+
+// ════════════════════════════════════════════════════════════
+//  ОТПРАВКА
+// ════════════════════════════════════════════════════════════
+async function submitForm() {
+  if (!validateStep(4)) return;
+
+  const btn = document.getElementById('submitBtn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  const payload = {
+    fio:          g('fio'),
+    dob:          g('dob'),
+    phone:        g('phone'),
+    snils:        g('snils'),
+    address:      g('address'),
+    benefit:      g('benefit_status'),
+    problem_type: (document.querySelector('input[name=problem]:checked') || {}).value,
+    medicine:     g('medicine'),
+    dosage:       g('dosage'),
+    recipe_num:   g('recipe_num'),
+    recipe_date:  g('recipe_date'),
+    clinic:       g('clinic'),
+    doctor:       g('doctor'),
+    pharmacy:     g('pharmacy'),
+    description:  g('description'),
+    consent:      true,
+    // vk_user_id: window.vk?.getUserID?.() ?? null,  // раскомментировать при интеграции с VK Bridge
+  };
+
+  try {
+    // Если есть файлы — отправляем через FormData
+    let response;
+    if (uploadedFiles.length) {
+      const fd = new FormData();
+      fd.append('data', JSON.stringify(payload));
+      uploadedFiles.forEach((f, i) => fd.append(`file_${i}`, f));
+      response = await fetch(`${API_BASE}/appeals`, { method: 'POST', body: fd });
+    } else {
+      response = await fetch(`${API_BASE}/appeals`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    }
+
+    if (!response.ok) throw new Error('server');
+    const result = await response.json();
+
+    // Сохраняем в localStorage для личного кабинета
+    saveAppeal({ ...payload, id: result.id, num: result.num, status: 'new', created: new Date().toISOString() });
+
+    document.getElementById('successNum').textContent = result.num;
+    document.getElementById('formWrap').style.display = 'none';
+    document.getElementById('successScreen').classList.add('show');
+
+  } catch {
+    // Fallback: сохраняем локально с временным ID
+    const num = generateLocalNum();
+    saveAppeal({ ...payload, id: 'local_' + Date.now(), num, status: 'new', created: new Date().toISOString() });
+    document.getElementById('successNum').textContent = num + ' (отложено)';
+    document.getElementById('formWrap').style.display = 'none';
+    document.getElementById('successScreen').classList.add('show');
+  } finally {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  }
+}
+
+function generateLocalNum() {
+  const y = new Date().getFullYear().toString().slice(2);
+  const n = String((getAppeals().length + 1)).padStart(4, '0');
+  return `#${y}-${n}`;
+}
+
+// ════════════════════════════════════════════════════════════
+//  СБРОС ФОРМЫ
+// ════════════════════════════════════════════════════════════
+function resetForm() {
+  document.getElementById('formWrap').style.display = 'block';
+  document.getElementById('successScreen').classList.remove('show');
+  document.querySelectorAll('input:not([type=radio]):not([type=checkbox]), select, textarea')
+    .forEach(el => el.value = '');
+  document.querySelectorAll('input[type=radio]').forEach(el => el.checked = false);
+  document.getElementById('consent').checked = false;
+  uploadedFiles = [];
+  document.getElementById('uploadArea').classList.remove('has-file');
+  document.getElementById('uploadPreview').textContent = '';
+  showStep(1);
+}
+
+// ════════════════════════════════════════════════════════════
+//  ЛИЧНЫЙ КАБИНЕТ
+// ════════════════════════════════════════════════════════════
+function getAppeals() {
+  try { return JSON.parse(localStorage.getItem('appeals') || '[]'); } catch { return []; }
+}
+
+function saveAppeal(appeal) {
+  const list = getAppeals();
+  list.unshift(appeal);
+  localStorage.setItem('appeals', JSON.stringify(list));
+}
+
+const STATUS_CFG = {
+  new:      { label: 'Новое',    badge: 'badge-new',      icon: '🔵' },
+  work:     { label: 'В работе', badge: 'badge-work',     icon: '🟡' },
+  done:     { label: 'Решено',   badge: 'badge-done',     icon: '🟢' },
+  rejected: { label: 'Закрыто', badge: 'badge-rejected',  icon: '🔴' },
+};
+
+function renderCabinet() {
+  const appeals = getAppeals();
+  const el = document.getElementById('cabinetContent');
+  if (!appeals.length) {
+    el.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📭</div>
+        <div class="empty-title">Обращений пока нет</div>
+        <div class="empty-text">Здесь будет история всех ваших обращений с текущим статусом.</div>
+      </div>`;
+    return;
+  }
+
+  let html = `<div style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Всего обращений: <strong>${appeals.length}</strong></div>`;
+  appeals.forEach((a, i) => {
+    const s = STATUS_CFG[a.status] || STATUS_CFG.new;
+    const date = a.created ? new Date(a.created).toLocaleDateString('ru-RU') : '';
+    html += `
+      <div class="appeal-card" onclick="openDetail(${i})">
+        <div class="appeal-card-top">
+          <div>
+            <div class="appeal-num">${a.num || '#—'}</div>
+            <div class="appeal-date">${date}</div>
+            <div class="appeal-medicine">💊 ${a.medicine || '—'}</div>
+            <div class="appeal-type">${a.problem_type || '—'}</div>
+          </div>
+          <span class="badge ${s.badge}">${s.icon} ${s.label}</span>
+        </div>
+        <div class="appeal-card-bottom">
+          <span class="appeal-status-text">${a.clinic || ''}</span>
+          <span style="font-size:12px;color:var(--text-muted)">Подробнее →</span>
+        </div>
+      </div>`;
+  });
+  el.innerHTML = html;
+}
+
+// ════════════════════════════════════════════════════════════
+//  ДЕТАЛЬНЫЙ ВИД
+// ════════════════════════════════════════════════════════════
+function openDetail(idx) {
+  const a = getAppeals()[idx];
+  if (!a) return;
+  const s = STATUS_CFG[a.status] || STATUS_CFG.new;
+  document.getElementById('detailTitle').textContent = `Обращение ${a.num || ''}`;
+
+  const tl = buildTimeline(a);
+
+  document.getElementById('detailBody').innerHTML = `
+    <div class="card">
+      <div class="card-header">Статус</div>
+      <div class="card-body">
+        <span class="badge ${s.badge}" style="font-size:13px;padding:5px 12px">${s.icon} ${s.label}</span>
+        <div style="margin-top:14px">${tl}</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">Данные обращения</div>
+      <div class="card-body">
+        <dl class="info-list">
+          <dt>ФИО</dt><dd>${a.fio||'—'}</dd>
+          <dt>Дата рожд.</dt><dd>${formatDate(a.dob)}</dd>
+          <dt>Телефон</dt><dd>${a.phone||'—'}</dd>
+          <dt>Адрес</dt><dd>${a.address||'—'}</dd>
+          <dt>Льготник</dt><dd>${a.benefit||'Нет'}</dd>
+          <dt>Проблема</dt><dd>${a.problem_type||'—'}</dd>
+          <dt>Лекарство</dt><dd>${a.medicine||'—'}</dd>
+          <dt>Дозировка</dt><dd>${a.dosage||'—'}</dd>
+          <dt>Рецепт №</dt><dd>${a.recipe_num||'—'}</dd>
+          <dt>Выписан</dt><dd>${formatDate(a.recipe_date)}</dd>
+          <dt>Поликлиника</dt><dd>${a.clinic||'—'}</dd>
+          <dt>Врач</dt><dd>${a.doctor||'—'}</dd>
+          <dt>Аптека</dt><dd>${a.pharmacy||'—'}</dd>
+        </dl>
+        <div class="divider"></div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">Описание:</div>
+        <div style="font-size:13px;line-height:1.6">${a.description||'—'}</div>
+      </div>
+    </div>`;
+
+  document.getElementById('detailOverlay').classList.add('open');
+}
+
+function buildTimeline(a) {
+  const steps = [
+    { key: 'new',      label: 'Обращение подано',        date: a.created },
+    { key: 'work',     label: 'Принято в работу',         date: a.work_date || null },
+    { key: 'done',     label: a.status === 'rejected' ? 'Закрыто' : 'Решено', date: a.done_date || null },
+  ];
+  const statusOrder = { new: 0, work: 1, done: 2, rejected: 2 };
+  const cur = statusOrder[a.status] ?? 0;
+
+  let html = '<div class="timeline">';
+  steps.forEach((step, i) => {
+    let cls = '';
+    if (i < cur) cls = 'done';
+    else if (i === cur) cls = 'active';
+    const dateStr = step.date ? new Date(step.date).toLocaleDateString('ru-RU') : '';
+    html += `<div class="tl-item ${cls}">
+      <div class="tl-date">${dateStr}</div>
+      <div class="tl-text">${step.label}</div>
+      ${a.comment && i === cur ? `<div class="tl-comment">${a.comment}</div>` : ''}
+    </div>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+function closeDetail(e) {
+  if (!e || e.target === document.getElementById('detailOverlay'))
+    document.getElementById('detailOverlay').classList.remove('open');
+}
+
+// ════════════════════════════════════════════════════════════
+//  VK BRIDGE — инициализация (раскомментировать в проде)
+// ════════════════════════════════════════════════════════════
+// import bridge from '@vkontakte/vk-bridge';
+// bridge.send('VKWebAppInit');
+
+// ════════════════════════════════════════════════════════════
+//  ИНИЦИАЛИЗАЦИЯ
+// ════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Ограничение даты рождения
+  document.getElementById('dob').max = new Date().toISOString().split('T')[0];
+  showStep(1);
+});
+
+// Очистка ошибок при вводе
+document.querySelectorAll('input, select, textarea').forEach(el => {
+  el.addEventListener('input', () => {
+    el.classList.remove('error');
+    const err = document.getElementById('err-' + el.id);
+    if (err) err.classList.remove('show');
+  });
+});
+</script>
+</body>
+</html>
