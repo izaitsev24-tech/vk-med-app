@@ -593,10 +593,7 @@
               <div class="field-error" id="err-phone">Введите номер телефона</div>
             </div>
           </div>
-          <div class="field">
-            <label>СНИЛС</label>
-            <input type="text" id="snils" placeholder="123-456-789 00" inputmode="numeric" maxlength="14">
-          </div>
+
           <div class="field">
             <label>Адрес регистрации <span class="req">*</span></label>
             <input type="text" id="address" placeholder="г. Красноярск, ул. Ленина, д. 1, кв. 1">
@@ -637,17 +634,10 @@
               </div>
             </label>
             <label class="radio-item">
-              <input type="radio" name="problem" value="Нет лекарства в аптеке">
+              <input type="radio" name="problem" value="Не выдают лекарства">
               <div class="radio-label">
-                🏪 Нет лекарства в аптеке
-                <small>Рецепт есть, но лекарство отсутствует или заканчивается</small>
-              </div>
-            </label>
-            <label class="radio-item">
-              <input type="radio" name="problem" value="Отказ в отпуске лекарства">
-              <div class="radio-label">
-                🚫 Отказ в отпуске лекарства
-                <small>Аптека отказывает несмотря на действующий рецепт</small>
+                🏪 Не выдают лекарства
+                <small>Рецепт есть, но лекарство отсутствует или в выдаче отказывают</small>
               </div>
             </label>
             <label class="radio-item">
@@ -746,8 +736,8 @@
           <div class="consent-box">
             В соответствии с Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных», 
             я даю согласие на обработку моих персональных данных, указанных в данной форме, 
-            оператором — Министерством здравоохранения Красноярского края (660009, г. Красноярск, 
-            ул. Красной Армии, 3) в целях рассмотрения обращения по вопросам лекарственного 
+            оператором — Законодательным Собранием Красноярского края (660009, г. Красноярск, 
+            пр. Мира, 110) в целях рассмотрения обращения по вопросам лекарственного 
             обеспечения. Обработка включает: сбор, запись, хранение, уточнение, использование 
             персональных данных. Согласие действует до его отзыва.
           </div>
@@ -786,11 +776,14 @@
     <div class="card-header">📞 Контакты</div>
     <div class="card-body">
       <div class="field">
-        <div style="font-size:14px;line-height:1.6">
-          <strong>Министерство здравоохранения Красноярского края</strong><br>
-          660009, г. Красноярск, ул. Красной Армии, 3<br>
-          Тел.: <a href="tel:83912117503" style="color:var(--accent)">8 (391) 211-75-03</a><br>
-          Горячая линия: <a href="tel:88002010303" style="color:var(--accent)">8-800-201-03-03</a> (бесплатно)
+        <div style="font-size:14px;line-height:1.8">
+          <strong>Илья Зайцев</strong><br>
+          Председатель комитета по охране здоровья и социальной политике<br>
+          Законодательного Собрания Красноярского края<br>
+          <br>
+          📞 Тел.: <a href="tel:+73912111430" style="color:var(--accent)">(391) 211-14-30</a><br>
+          ✉️ Email: <a href="mailto:help@izaitsev.ru" style="color:var(--accent)">help@izaitsev.ru</a><br>
+          💬 Канал в MAX: <a href="https://max.ru/zaitsev24" target="_blank" style="color:var(--accent)">max.ru/zaitsev24</a>
         </div>
       </div>
     </div>
@@ -853,7 +846,7 @@
 // ════════════════════════════════════════════════════════════
 //  КОНФИГУРАЦИЯ
 // ════════════════════════════════════════════════════════════
-const API_BASE = 'https://vk-med-backend-production.up.railway.app/api'; // ← замените на адрес вашего бэкенда
+const API_BASE = 'https://ВАШ_СЕРВЕР/api'; // ← замените на адрес вашего бэкенда
 
 // ════════════════════════════════════════════════════════════
 //  НАВИГАЦИЯ
@@ -1010,7 +1003,7 @@ async function submitForm() {
     fio:          g('fio'),
     dob:          g('dob'),
     phone:        g('phone'),
-    snils:        g('snils'),
+
     address:      g('address'),
     benefit:      g('benefit_status'),
     problem_type: (document.querySelector('input[name=problem]:checked') || {}).value,
