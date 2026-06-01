@@ -595,6 +595,10 @@
           </div>
 
           <div class="field">
+            <label>СНИЛС</label>
+            <input type="text" id="snils" placeholder="123-456-789 00" inputmode="numeric" maxlength="14">
+          </div>
+          <div class="field">
             <label>Адрес регистрации <span class="req">*</span></label>
             <input type="text" id="address" placeholder="г. Красноярск, ул. Ленина, д. 1, кв. 1">
             <div class="field-error" id="err-address">Укажите адрес регистрации</div>
@@ -635,16 +639,28 @@
           <div class="field">
             <label>Статус льготника</label>
             <select id="benefit_status">
-              <option value="">— Не являюсь льготником —</option>
-              <option value="Инвалид 1 группы">Инвалид I группы</option>
-              <option value="Инвалид 2 группы">Инвалид II группы</option>
-              <option value="Инвалид 3 группы">Инвалид III группы</option>
-              <option value="Ребёнок-инвалид">Ребёнок-инвалид</option>
-              <option value="Ветеран ВОВ">Ветеран ВОВ</option>
-              <option value="Ветеран боевых действий">Ветеран боевых действий</option>
-              <option value="Участник СВО">Участник СВО / член семьи</option>
-              <option value="Федеральный льготник">Федеральный льготник (иное)</option>
-              <option value="Региональный льготник">Региональный льготник</option>
+              <option value="">— Выберите —</option>
+              <option value="Не знаю">Не знаю / не уверен</option>
+              <optgroup label="Федеральные льготники">
+                <option value="Инвалид 1 группы">Инвалид I группы</option>
+                <option value="Инвалид 2 гру                <option value="Инвалид 2 гру                <option valнвалид 3 группы">Инвалид III группы</option>
+                <option value="Ребёнок-инвалид">Ребёнок-инвалид</option>
+                <option value="Ветеран ВОВ">Ветеран ВОВ</option>
+                <option value="Ветеран боевых действий">Ветеран боевых действий</option>
+                <option value="Участник СВО">Участник СВО / член семьи</option>
+              </optgroup>
+              <optgroup label="Социально значимые заболевания">
+                <option value="Орфанное заболевание">Орфанное заболевание</option>
+                <option value="Муковисцидоз">Муковисцидоз</option>
+                <option value="ВИЧ/Гепатит">ВИЧ / Гепатит</option>
+                <option value="ВЗН">Высокозатратные нозологии (ВЗН)</option>
+                <option value="РЛ 50%">Региональная льгота 50%</option>
+                <option value="Специальное питание">Специальное лечебное питание</option>
+                <option value="Детское питание">Детское питание</option>
+              </optgroup>
+              <optgroup label="Региональные льготники">
+                <option value="Региональный льготник">Региональный льготник (иное)</option>
+              </optgroup>
               <option value="Другое">Другое</option>
             </select>
           </div>
@@ -674,6 +690,13 @@
               </div>
             </label>
             <label class="radio-item">
+              <input type="radio" name="problem" value="Не назначают ВК" onclick="updateRecipeFields()">
+              <div class="radio-label">
+                🏛 Не назначают врачебную комиссию
+                <small>Отказывают в проведении ВК для назначения препарата по торговому наименованию</small>
+              </div>
+            </label>
+            <label class="radio-item">
               <input type="radio" name="problem" value="Другое" onclick="updateRecipeFields()">
               <div class="radio-label">
                 📝 Другое
@@ -692,15 +715,27 @@
             <input type="text" id="medicine" placeholder="Например: Метформин">
             <div class="field-error" id="err-medicine">Укажите название лекарства</div>
           </div>
-          <div class="field">
-            <label>Дозировка</label>
-            <input type="text" id="dosage" placeholder="500 мг, 2 р/день">
+          <div class="row2">
+            <div class="field">
+              <label>Дозировка</label>
+              <input type="text" id="dosage" placeholder="500 мг">
+            </div>
+            <div class="field">
+              <label>Сигнатура (режим приёма)</label>
+              <input type="text" id="signature" placeholder="2 раза в день">
+            </div>
           </div>
           <div style="margin-bottom:14px">
             <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;padding:10px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-sm)">
-              <input type="checkbox" id="vk_decision" style="margin-top:2px;accent-color:var(--accent);flex-shrink:0;width:16px;height:16px">
+              <input type="checkbox" id="vk_decision" style="margin-top:2px;accent-color:var(--accent);flex-shrink:0;width:16px;height:16px" onchange="toggleVKNumber()">
               <span style="font-size:14px;line-height:1.4">Есть решение врачебной комиссии о назначении препарата по торговому наименованию</span>
             </label>
+          </div>
+          <div id="vkNumberField" style="display:none;margin-top:8px">
+            <div class="field">
+              <label>Номер решения врачебной комиссии</label>
+              <input type="text" id="vk_number" placeholder="№ протокола ВК">
+            </div>
           </div>
           <div id="recipeFields" style="display:none">
             <div class="row2">
@@ -897,6 +932,11 @@ function updateRecipeFields() {
   const show = chosen && (chosen.value === 'Не выдают лекарства' || chosen.value === 'Другое');
   const el = document.getElementById('recipeFields');
   if (el) el.style.display = show ? 'block' : 'none';
+}
+
+function toggleVKNumber() {
+  const checked = document.getElementById('vk_decision').checked;
+  document.getElementById('vkNumberField').style.display = checked ? 'block' : 'none';
 }
 
 function togglePatientFields() {
@@ -1111,6 +1151,11 @@ async function submitForm() {
     patient_dob:    g('patient_dob'),
     patient_relation: g('patient_relation'),
     vk_decision:    document.getElementById('vk_decision').checked,
+    vk_number:      g('vk_number'),
+    signature:      g('signature'),
+    snils:          g('snils'),
+    last_receipt_date: g('last_receipt_date'),
+    last_receipt_qty:  g('last_receipt_qty'),
     // vk_user_id: window.vk?.getUserID?.() ?? null,  // раскомментировать при интеграции с VK Bridge
   };
 
